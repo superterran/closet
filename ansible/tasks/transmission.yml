@@ -24,9 +24,9 @@
       dnf:
         name: transmission-daemon
         state: latest
-    - name: systemd | activate service
-      become: true
-      service: name=transmission-daemon.service enabled=yes state=started
+    # - name: systemd | activate service
+    #   become: true
+    #   service: name=transmission-daemon.service enabled=yes state=started
     - name: create firewall rule
       become: true
       firewalld:
@@ -49,13 +49,13 @@
       lineinfile:
         path: /var/lib/transmission/.config/transmission-daemon/settings.json
         regexp: '\"download-dir\"'
-        line: '"download-dir": "c",'
+        line: '"download-dir": "/mnt/storage/Torrents",'
 
     - name: setting incomplete dir
       lineinfile:
         path: /var/lib/transmission/.config/transmission-daemon/settings.json
         regexp: '\"incomplete-dir\"'
-        line: '"c": "/mnt/storage/Torrents/Incomplete",'
+        line: '"incomplete-dir": "/mnt/storage/Torrents/Incomplete",'
 
     - name: enable incomplete folder
       lineinfile:
@@ -67,4 +67,3 @@
     - name: systemd | activate service
       become: true
       service: name=transmission-daemon.service enabled=yes state=started
-journalctl  -xe
