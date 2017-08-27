@@ -1,0 +1,3 @@
+[submodule "ansible/roles/syncthing"]
+	path = ansible/roles/syncthing
+	url = https://github.com/escaped/ansible-syncthing.git
