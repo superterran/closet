@@ -2,6 +2,7 @@
 - include: timezone.yml
 - include: dnf-update.yml
 - include: selinux.yml
+- include: firewalld.yml
 - include: storage.yml
 - include: syncthing.yml
 - include: transmission.yml

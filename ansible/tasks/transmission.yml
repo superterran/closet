@@ -1,0 +1,70 @@
+---
+
+- name: "installing transmission"
+  hosts: all
+  gather_facts: no
+
+  tags:
+    - torrent
+    - transmission
+
+  vars:
+    PLAYBOOK_SKIP_TRANSMISSION: no
+
+  tasks:
+    - block:
+        - debug: msg="skipping, PLAYBOOK_SKIP_TRANSMISSION is truthy"
+          run_once: true
+        - meta: end_play
+      when: PLAYBOOK_SKIP_TRANSMISSION | bool
+    - debug: msg="setting stoarge volume, pass PLAYBOOK_SKIP_TRANSMISSION=yes to skip."
+      run_once: true
+
+    - name: install transmission
+      dnf:
+        name: transmission-daemon
+        state: latest
+    - name: systemd | activate service
+      become: true
+      service: name=transmission-daemon.service enabled=yes state=started
+    - name: create firewall rule
+      become: true
+      firewalld:
+        port: 9091/tcp
+        permanent: true
+        state: enabled
+        zone: public
+
+    - name: systemd | stop service to modify settings
+      become: true
+      service: name=transmission-daemon.service enabled=yes state=stopped
+
+    - name: disabling rpc whitelist
+      lineinfile:
+        path: /var/lib/transmission/.config/transmission-daemon/settings.json
+        regexp: '\"rpc-whitelist-enabled\"'
+        line: '"rpc-whitelist-enabled": false,'
+
+    - name: setting download path
+      lineinfile:
+        path: /var/lib/transmission/.config/transmission-daemon/settings.json
+        regexp: '\"download-dir\"'
+        line: '"download-dir": "c",'
+
+    - name: setting incomplete dir
+      lineinfile:
+        path: /var/lib/transmission/.config/transmission-daemon/settings.json
+        regexp: '\"incomplete-dir\"'
+        line: '"c": "/mnt/storage/Torrents/Incomplete",'
+
+    - name: enable incomplete folder
+      lineinfile:
+        path: /var/lib/transmission/.config/transmission-daemon/settings.json
+        regexp: '\"incomplete-dir-enabled\"'
+        line: '"incomplete-dir-enabled": true,'
+
+
+    - name: systemd | activate service
+      become: true
+      service: name=transmission-daemon.service enabled=yes state=started
+journalctl  -xe
