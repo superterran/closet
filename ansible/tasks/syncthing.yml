@@ -1,8 +1,8 @@
 ---
 - hosts: all
   vars:
-    syncthing_address: 127.0.0.1:8384
-    syncthing_listen: 127.0.0.1:22000
+    syncthing_address: 0.0.0.0:8384
+    syncthing_listen: 0.0.0.0:22000
     syncthing_use_systemd: true
     syncthing_use_supervisor: false
     syncthing_use_ufw: false
