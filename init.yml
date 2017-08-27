@@ -3,6 +3,7 @@
   vars:
    - email: superterran@gmail.com
   tasks:
-   - name: check if epel is on server
-     stat: path=~/epel-release-7-7.noarch.rpm
-     register: epel
+  - name: upgrade all packages
+    dnf:
+      name: "*"
+      state: latest
