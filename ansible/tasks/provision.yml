@@ -3,7 +3,8 @@
 - include: users.yml
 - include: dnf-update.yml
 - include: selinux.yml
-- include: firewalld.ymls
+- include: firewalld.yml
 - include: storage.yml
+- include: samba.yml
 - include: syncthing.yml
 - include: transmission.yml
