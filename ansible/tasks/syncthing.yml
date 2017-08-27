@@ -6,20 +6,18 @@
     syncthing_use_systemd: true
     syncthing_use_supervisor: false
     syncthing_use_ufw: false
-
   pre_tasks:
   - name: install deps
     dnf:
       name: python-firewall
       state: latest 
-  - name: systemd | activate service
-    become: true
-    service: name=ufw enabled=yes state=started
   roles:
     - role: syncthing
   tasks:
     - name: create firewall rule
+      become: yes
       firewalld:
         port: 8384/tcp
         permanent: true
-        state: disabled
+        state: enabled
+        zone: public
