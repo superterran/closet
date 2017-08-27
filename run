@@ -34,8 +34,8 @@ if [ $1 ]; then
             fi
         done
     fi
-    echo "Executing post-build task" 
-    $COMMAND ansible/post-build.yml	
+ #   echo "Executing post-build task" 
+ #   $COMMAND ansible/post-build.yml	
 else
     display_help
 fi 
