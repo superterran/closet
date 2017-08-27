@@ -1,10 +1,25 @@
 ---
 - hosts: all
   vars:
-    syncthing_address: 127.0.0.1:8080
+    syncthing_address: 127.0.0.1:8384
     syncthing_listen: 127.0.0.1:22000
     syncthing_use_systemd: true
     syncthing_use_supervisor: false
     syncthing_use_ufw: false
+
+  pre_tasks:
+  - name: install deps
+    dnf:
+      name: python-firewall
+      state: latest 
+  - name: systemd | activate service
+    become: true
+    service: name=ufw enabled=yes state=started
   roles:
     - role: syncthing
+  tasks:
+    - name: create firewall rule
+      firewalld:
+        port: 8384/tcp
+        permanent: true
+        state: disabled
