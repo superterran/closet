@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+  - name: create our favorite user
+    user:
+      name: me
+      shell: /bin/bash
+      append: yes
