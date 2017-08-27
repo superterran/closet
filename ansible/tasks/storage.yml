@@ -1,0 +1,32 @@
+---
+
+- name: "configure storage volume for use"
+  hosts: all
+  gather_facts: no
+
+  tags:
+    - storage
+
+  vars:
+    PLAYBOOK_SKIP_STORAGE: no
+
+  tasks:
+    - block:
+        - debug: msg="skipping, PLAYBOOK_SKIP_STORAGE is truthy"
+          run_once: true
+        - meta: end_play
+      when: PLAYBOOK_SKIP_STORAGE | bool
+    - debug: msg="setting stoarge volume, pass PLAYBOOK_SKIP_STORAGE=yes to skip."
+      run_once: true
+
+    - name: install deps
+      dnf:
+        name: ntfs-3g
+        state: latest
+    - name: mounting my favorite hard drive
+      mount:
+        path: /mnt/storage
+        boot: yes
+        fstype: ntfs
+        src: /dev/disk/by-label/Storage
+        state: mounted
