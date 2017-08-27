@@ -1,7 +1,5 @@
 ---
 - hosts: all
-  vars:
-   - email: superterran@gmail.com
   tasks:
   - name: upgrade all packages
     dnf:

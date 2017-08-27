@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+COMMAND="ansible-playbook -i ./ansible/hosts"
+BUILDFILE="build.yml"
+
+execute () {
+    echo "executing $1/build.yml **"
+    $COMMAND $1/$BUILDFILE
+}
+
+display_help () {
+    cat <<-EOF
+    deployment/Management script
+
+    usage: 
+
+    ./run                shows this usage help
+    ./run all            runs all */build.yml files
+    ./run <directory>    runs the <directory>/build.yml
+
+EOF
+exit
+}
+
+if [ $1 ]; then
+    if [ $1 != "all" ]; then
+        execute $1
+    else 
+        for D in *; do
+            if [ -d "${D}" ]; then
+                if [ -f "${D}/build.yml" ]; then
+                    execute ${D}
+                fi
+            fi
+        done
+    fi
+    echo "Executing post-build task" 
+    $COMMAND ansible/post-build.yml	
+else
+    display_help
+fi 
+    
